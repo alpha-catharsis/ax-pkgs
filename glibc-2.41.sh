@@ -15,7 +15,7 @@ function pkg_prepare {
     shell_cmd "${cmd[@]}"
     cmd=(ln -sfv ../lib/ld-linux-x86-64.so.2 "${AX_ROOT}"/lib64/ld-lsb-x86-64.so.3)
     shell_cmd "${cmd[@]}"
-    apply_patch "${patch_file}"
+    apply_patch "glibc-2.41-fhs-1.patch"
     prepare_build
     entry "Enforcing the use of [path:/usr/sbin] directory"
     echo "rootsbindir=/usr/sbin" > configparms
