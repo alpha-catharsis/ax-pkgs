@@ -14,6 +14,8 @@ function pkg_prepare {
     entry "Generating headers"
     cmd=(make headers)
     shell_cmd "${cmd[@]}"
+    cmd=(find usr/include -type f ! -name '*.h' -delete)
+    shell_cmd "${cmd[@]}"
 }
 
 function pkg_install {
