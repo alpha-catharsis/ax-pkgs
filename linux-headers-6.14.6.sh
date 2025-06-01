@@ -19,7 +19,7 @@ function pkg_prepare {
 }
 
 function pkg_install {
-    local inst_dir="${AX_INSTS}/${pkg_name}-${pkg_ver}"
+    local inst_dir="${AX_INSTS}/${pkg_name}/${pkg_ver}"
     create_dirs "${inst_dir}/usr"
     cmd=(cp -r usr/include "${inst_dir}/usr")
     shell_cmd "${cmd[@]}"
