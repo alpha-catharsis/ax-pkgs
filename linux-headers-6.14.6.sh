@@ -7,7 +7,7 @@ function pkg_fetch {
 }
 
 function pkg_prepare {
-    local cmd=(tar -xf "archive.tar.xz" --strip-components=1)
+    unpack_archive_stripped "archive.tar.xz"
     entry "Cleaning up package"
     local cmd=(make mrproper)
     shell_cmd "${cmd[@]}"
