@@ -1,13 +1,15 @@
 pkg_name="linux-headers"
-pkg_ver="6.14.6"
+pkg_vers=("6.14.6")
 
 function pkg_fetch {
-    local url="https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.14.6.tar.xz"
-    fetch_url "${url}" "archive.tar.xz"
+    local pkg_ver="${1}"
+    local url="https://www.kernel.org/pub/linux/kernel/v6.x/linux-${pkg_ver}.tar.xz"
+    fetch_url "${url}" "linux.tar.xz"
 }
 
 function pkg_prepare {
-    unpack_archive_stripped "archive.tar.xz"
+    local pkg_ver="${1}"
+    unpack_archive_stripped "linux.tar.xz"
     entry "Cleaning up package"
     local cmd=(make mrproper)
     shell_cmd "${cmd[@]}"
@@ -19,6 +21,7 @@ function pkg_prepare {
 }
 
 function pkg_install {
+    local pkg_ver="${1}"
     local inst_dir="${AX_INSTS}/${pkg_name}/${pkg_ver}"
     create_dirs "${inst_dir}/usr"
     cmd=(cp -r usr/include "${inst_dir}/usr")

@@ -1,21 +1,27 @@
 pkg_name="glibc"
-pkg_ver="2.41"
+pkg_vers=("2.41")
 
 function pkg_fetch {
-    local url="https://ftp.gnu.org/gnu/glibc/glibc-2.41.tar.xz"
-    fetch_url "${url}" "archive.tar.xz"
-    url="https://www.linuxfromscratch.org/patches/lfs/development/glibc-2.41-fhs-1.patch"
-    fetch_url "${url}" "glibc-2.41-fhs-1.patch"
+    local pkg_ver="${1}"
+    local url="https://ftp.gnu.org/gnu/glibc/glibc-${pkg_ver}.tar.xz"
+    fetch_url "${url}" "glibc.tar.xz"
+    if [[ "${pkg_ver}" == "2.41" ]] ; then
+        url="https://www.linuxfromscratch.org/patches/lfs/development/glibc-2.41-fhs-1.patch"
+        fetch_url "${url}" "glibc-2.41-fhs-1.patch"
+    fi
 }
 
 function pkg_prepare {
-    unpack_archive_stripped "archive.tar.xz"
+    local pkg_ver="${1}"
+    unpack_archive_stripped "glibc.tar.xz"
     entry "Creating 64-bit library compatibility links"
     local cmd=(ln -sfv ../lib/ld-linux-x86-64.so.2 "${AX_ROOT}"/lib64)
     shell_cmd "${cmd[@]}"
     cmd=(ln -sfv ../lib/ld-linux-x86-64.so.2 "${AX_ROOT}"/lib64/ld-lsb-x86-64.so.3)
     shell_cmd "${cmd[@]}"
-    apply_patch "glibc-2.41-fhs-1.patch"
+    if [[ "${pkg_ver}" == "2.41" ]] ; then
+        apply_patch "glibc-2.41-fhs-1.patch"
+    fi
     prepare_build
     entry "Enforcing the use of [path:/usr/sbin] directory"
     echo "rootsbindir=/usr/sbin" > configparms
@@ -31,6 +37,7 @@ function pkg_prepare {
 }
 
 function pkg_install {
+    local pkg_ver="${1}"
     local inst_dir="${AX_INSTS}/${pkg_name}/${pkg_ver}"
     create_dirs "${inst_dir}/usr"
     install_build "${inst_dir}"
